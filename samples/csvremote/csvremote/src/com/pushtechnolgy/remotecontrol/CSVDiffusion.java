@@ -43,7 +43,6 @@ public class CSVDiffusion {
 	
 	private	ServerDetails serverDetails = null;
 	private RemoteService remoteService = null;
-//	private static final String CONTROL_TOPIC = "CSVRemoteService";
 	private static final String CONTROL_TOPIC = "RemoteControl";
 	
 
@@ -55,10 +54,13 @@ public class CSVDiffusion {
 	private String [] topicFields;
 	
 	CSVDiffusion(String server) throws InterruptedException{
-		String connectstring="dpt://"+server;
+		
+		String connectstring="dpt://"+server; 
 		try {
+			//set the connection info to provided
 			serverDetails = ConnectionFactory.createServerDetails(connectstring);
-
+			// connect to diffusion instance using remote control service provided
+			// set our topic tree to CSVTopics
 			remoteService = RemoteServiceFactory.createRemoteService(
 							serverDetails, CONTROL_TOPIC, "CSVTopics", new MyRemoteServiceListener());			
 
@@ -71,7 +73,9 @@ public class CSVDiffusion {
 		((MyRemoteServiceListener) theRemoteListener).setRemoteService(remoteService);
 	}
 	
+	// Create meta data for our messages - should be set of fields basaed on csv header line
 	void CSVSetRecordType(String [] fields) throws APIException {
+		
 		topicFields = fields;
 		messageMetadata = MetadataFactory.newMetadata("CSVMessage",TopicDataType.RECORD);
 		recordMetadata=messageMetadata.addRecord("CSVRecord");
@@ -79,6 +83,8 @@ public class CSVDiffusion {
 			recordMetadata.addField(fields[i]);
 		}				
 	}
+	
+	// Add topic to tree using above metadata as topic data
 	void CSVAddTopic(String t) throws APIException {
 		CSVTopicData=new RecordTopicSpecification(messageMetadata);
 		try {
@@ -89,6 +95,8 @@ public class CSVDiffusion {
 		}
 		
 	}
+	
+	// Create meta data for our special topic to tell client field names 
 	void CSVAddControlTopic(String t) throws APIException {
 		CSVControlTopicData=new RecordTopicSpecification(messageMetadata);
 		try {
@@ -110,16 +118,22 @@ public class CSVDiffusion {
 
 	}
 
-
+	// Publish Topic Data
 	void CSVPublish(String topic, String[] t) throws APIException {
+		
+		//Get record based on metadata definition and store new values
 		Record record = new Record(messageMetadata,t);
+		
+		//Get a message buffer
 		TopicMessage msg = null;
 		try {
 			msg = remoteService.createDeltaMessage(topic, 1024);
 		} catch (APIException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}	
+		
+		//Put record into message buffer and publish
 		msg.putRecords(record);
 		remoteService.publish(msg);
 		

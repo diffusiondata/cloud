@@ -38,8 +38,6 @@ public class CSVPublisher {
 		int		topicindex=0;
 		HashMap<String, Integer> topicmap = new HashMap<String, Integer>(); 
 		int	outseqnum=1;
-		int outseqnumindex;
-		int topicseqnum;
 		
 		if (args.length < 3) {
 			System.out.println("Usage: host:port filename topic");
@@ -53,16 +51,25 @@ public class CSVPublisher {
 		
 		System.out.println("Host="+server+" Filename="+filename+" Topic="+topic);
 	
-		CSVReader reader = new CSVReader(new FileReader(filename));
+		//Diffusion Publisher
 		CSVDiffusion thePublisher = new CSVDiffusion(server);
-		String [] nextLine;
+		Thread.sleep(5000);
+
+		//CSV reader 
+		CSVReader reader = new CSVReader(new FileReader(filename));
 		
+
+		
+		String [] nextLine;	
 		//read header
 		String [] headerLine = reader.readNext();
 		String [] newfields = new String[headerLine.length+1];
+		
+		// Add field for Publisher seq num at end
 		System.arraycopy(headerLine, 0,newfields, 0, headerLine.length);
 		newfields[headerLine.length]="PubSeqNum";
 		
+		//if topic is a column in file find it
 		if (filetopic) {
 			topic=topic.substring(1,topic.length());
 			for (int i=0; i<headerLine.length; i++) {
@@ -71,7 +78,8 @@ public class CSVPublisher {
 				}
 			}
 		}
-		
+
+		//Set record type to column names
 		try {
 			thePublisher.CSVSetRecordType(newfields);
 		} catch (APIException e) {
@@ -80,8 +88,11 @@ public class CSVPublisher {
 		}
 		
 		
-		Thread.sleep(5000);
+		
+		//Add control topic so client can build display from names
 		thePublisher.CSVAddControlTopic("Control");
+		
+		//if single file topic add it
 		if (!filetopic) {
 			thePublisher.CSVAddTopic(topic);
 		}
@@ -92,17 +103,16 @@ public class CSVPublisher {
 			outseqnum++;
 
 			if (filetopic) {
+				//add topic if not already added
 				if (!topicmap.containsKey(nextLine[topicindex])) {
 					topicmap.put(nextLine[topicindex],1);
-					topicseqnum=1;
 					thePublisher.CSVAddTopic(nextLine[topicindex]);
 				}
-				else {
-					topicseqnum=(Integer) topicmap.get(nextLine[topicindex]);
-				}
+				//publish
 				thePublisher.CSVPublish(nextLine[topicindex],newfields);
 			}
 			else {
+				//publish
 				thePublisher.CSVPublish(topic,newfields);
 			}
 			// nextLine[] is an array of values from the line
@@ -110,6 +120,7 @@ public class CSVPublisher {
 				System.out.print(nextLine[i]+",");
 			}
 			System.out.println();
+			//set to 2 lines per sec
 			Thread.sleep(500);
 			
 		}	
