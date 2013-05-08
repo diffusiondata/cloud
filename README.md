@@ -1,17 +1,18 @@
-Cloud
-=====
+Diffusion Cloud
+===============
 
-Diffusion Cloud Demos and Examples
+This repository contains Diffusion Demos and Examples for the cloud.
 
 Amazon EC2
 ==========
 
-Push Technology have created an image in Amazon EC2 for their enterprise data distribution product, Diffusion.
-As part of this provision there is a starter guide available for you to use in order to create, deploy and operate an 
+Push Technology has created an Amazon EC2 image for their flagship data distribution product, Diffusion.
+This repository contains examples that can be run on that EC2 image and also provides a starter guide that shows
+you how to create, deploy and operate an 
 application that demostrates the power of Diffusion. 
-The application will tranform data from a data source and publish the data, via Diffusion running in the "cloud", 
+The application will tranform data from a data source and publish the data, via Diffusion running in the EC2 Cloud, 
 to any net connected device.
 
-The starter guide can be located in the following folder:
+The starter guide can be located in the following location:
 
-  /pushtechnology/cloud
+  https://github.com/pushtechnology/cloud/The%20Amazon%20EC2%20Diffusion%20Cloud%20Starter%20Guide.pdf
