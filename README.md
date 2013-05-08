@@ -15,4 +15,4 @@ to any net connected device.
 
 The starter guide can be located in the following location:
 
-  https://github.com/pushtechnology/cloud/The%20Amazon%20EC2%20Diffusion%20Cloud%20Starter%20Guide.pdf
+  https://github.com/pushtechnology/cloud/blob/master/The%20Amazon%20EC2%20Diffusion%20Cloud%20Starter%20Guide.pdf
