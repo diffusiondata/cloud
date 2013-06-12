@@ -18,27 +18,22 @@ package com.pushtechnolgy.remotecontrol;
 
 import java.util.*;
 import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameMappingStrategy;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringWriter;
-
-import java.beans.IntrospectionException;
 
 import com.pushtechnology.diffusion.api.APIException;
-import com.pushtechnology.diffusion.api.message.MessageException;
+
 public class CSVPublisher {
-		
+
 	public static void main(String[] args) throws InterruptedException, IOException, APIException {
-		String	server;
-		String  filename;
-		String  topic;
-		int		topicindex=0;
-		HashMap<String, Integer> topicmap = new HashMap<String, Integer>(); 
+		String server;
+		String filename;
+		String topic;
+		int    topicindex=0;
+		HashMap<String, Integer> topicmap = new HashMap<String, Integer>();
 		int	outseqnum=1;
-		
+
 		if (args.length < 3) {
 			System.out.println("Usage: host:port filename topic");
 			System.exit(0);
@@ -47,28 +42,28 @@ public class CSVPublisher {
 		filename=args[1];
 		topic=args[2];
 		boolean filetopic=topic.startsWith("=");
-		
-		
+
+
 		System.out.println("Host="+server+" Filename="+filename+" Topic="+topic);
-	
+
 		//Diffusion Publisher
 		CSVDiffusion thePublisher = new CSVDiffusion(server);
 		Thread.sleep(5000);
 
 		//CSV reader 
 		CSVReader reader = new CSVReader(new FileReader(filename));
-		
 
-		
-		String [] nextLine;	
+
+
+		String [] nextLine;
 		//read header
 		String [] headerLine = reader.readNext();
 		String [] newfields = new String[headerLine.length+1];
-		
+
 		// Add field for Publisher seq num at end
 		System.arraycopy(headerLine, 0,newfields, 0, headerLine.length);
 		newfields[headerLine.length]="PubSeqNum";
-		
+
 		//if topic is a column in file find it
 		if (filetopic) {
 			topic=topic.substring(1,topic.length());
@@ -86,12 +81,12 @@ public class CSVPublisher {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
+
+
 		//Add control topic so client can build display from names
 		thePublisher.CSVAddControlTopic("Control");
-		
+
 		//if single file topic add it
 		if (!filetopic) {
 			thePublisher.CSVAddTopic(topic);
@@ -123,7 +118,8 @@ public class CSVPublisher {
 			//set to 2 lines per sec
 			Thread.sleep(500);
 			
-		}	
+		}
+		reader.close();
 
 	}
 
