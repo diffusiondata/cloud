@@ -16,3 +16,20 @@ to any net connected device.
 The starter guide can be located in the following location:
 
   https://github.com/pushtechnology/cloud/blob/master/The%20Diffusion%20Amazon%20EC2%20Starter%20Guide.pdf
+
+Build Instructions
+==================
+
+These samples can be built from Eclipse.
+From Eclipse with both EGit and the Diffusion Tools installed you can import this Git repository.
+This should create these samples as Eclipse projects that should build successfuly.
+They can then be exported as JAR files as described in the starter guide.
+
+License
+=======
+
+These demos are licensed under the Apache 2.0 License.
+Also included as a dependency is opencsv, this is also licensed under Apache 2.0.
+It is available from:
+
+http://opencsv.sourceforge.net/
